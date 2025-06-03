@@ -40,5 +40,9 @@ public class VeiculoService {
     public Veiculo buscarPorFrota(String frota) {
         return repository.findByFrota(frota).orElse(null);
     }
+    
+    public List<Veiculo> buscarPorPlaca(String placa){
+        return repository.findByPlacaLike(placa);
+    }
 
 }

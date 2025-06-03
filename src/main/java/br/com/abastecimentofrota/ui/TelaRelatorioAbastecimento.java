@@ -1,8 +1,20 @@
 package br.com.abastecimentofrota.ui;
 
+import br.com.abastecimentofrota.DTO.LinhaRelatorioCupomDTO;
+import br.com.abastecimentofrota.renderer.TotalRowRenderer;
+import br.com.abastecimentofrota.service.AbastecimentoService;
+import br.com.abastecimentofrota.service.PostoService;
+import br.com.abastecimentofrota.service.RelatorioAbastecimentoService;
+import br.com.abastecimentofrota.service.VeiculoService;
+import br.com.abastecimentofrota.util.RelatorioCuponsTableModel;
 import br.com.abastecimentofrota.util.TipoCombustivel;
 import br.com.abastecimentofrota.util.TipoCombustivelComboBoxModel;
-import br.com.abastecimentofrota.util.TipoRegistroComboBoxModel;
+import java.awt.Color;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -16,21 +28,51 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
         "05 - Maio", "06 - Junho", "07 - Julho", "08 - Agosto",
         "09 - Setembro", "10 - Outubro", "11 - Novembro", "12 - Dezembro"
     };
-    
+
     //valor combobox ano
     String[] anos = {
         "2025"
     };
-    
-    public TelaRelatorioAbastecimento() {
+
+    //variaveis do Srping
+    private final VeiculoService veiculoService;
+    private final AbastecimentoService abastecimentoService;
+    private final PostoService postoService;
+    private final RelatorioAbastecimentoService relatorioService;
+
+    public TelaRelatorioAbastecimento(VeiculoService veiculoService, AbastecimentoService abastecimentoService, PostoService postoService, RelatorioAbastecimentoService relatorioService) {
+        this.veiculoService = veiculoService;
+        this.abastecimentoService = abastecimentoService;
+        this.postoService = postoService;
+        this.relatorioService = relatorioService;
+
         initComponents();
-        
+
         //configurando os combobox
         TipoCombustivelComboBoxModel comboTipoCombustivel = new TipoCombustivelComboBoxModel();
         comboCombustivel.setModel(comboTipoCombustivel);
+
+        //configurando as tables
+        List<LinhaRelatorioCupomDTO> dadosIniciaisPagos = new ArrayList<>();
+        RelatorioCuponsTableModel tableModelPagos = new RelatorioCuponsTableModel(dadosIniciaisPagos);
+        configurarTabela(tablePagos, tableModelPagos);
         
-      
-        
+        List<LinhaRelatorioCupomDTO> dadosIniciaisPagosNaoCadastrados = new ArrayList<>();
+        RelatorioCuponsTableModel tableModelPagosNaoCadastrados = new RelatorioCuponsTableModel(dadosIniciaisPagosNaoCadastrados);
+        configurarTabela(tablePagosNaoCadastrados, tableModelPagosNaoCadastrados);
+
+        List<LinhaRelatorioCupomDTO> dadosIniciaisNaoPagosNaoCadastrados = new ArrayList<>();
+        RelatorioCuponsTableModel tableModelNaoPagosNaoCadastrados = new RelatorioCuponsTableModel(dadosIniciaisNaoPagosNaoCadastrados);
+        configurarTabela(tableNaoPagosNaoCadastrados, tableModelNaoPagosNaoCadastrados);
+
+    }
+
+    private void configurarTabela(JTable tabela, RelatorioCuponsTableModel tableModel) {
+        tabela.setModel(tableModel);
+        tabela.setDefaultRenderer(Object.class, new TotalRowRenderer());
+        tabela.setGridColor(Color.LIGHT_GRAY);
+        tabela.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        tabela.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
     }
 
     /**
@@ -52,9 +94,9 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablePagos = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tablePagosNaoCadastrados = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tableNaoPagosNaoCadastrados = new javax.swing.JTable();
         buttonExportar = new javax.swing.JButton();
         comboAno = new javax.swing.JComboBox<>();
 
@@ -69,7 +111,15 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
 
         labelAno1.setText("Combustível*");
 
+        buttonBuscar.setBackground(new java.awt.Color(76, 175, 80));
+        buttonBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonBuscar.setForeground(new java.awt.Color(255, 255, 255));
         buttonBuscar.setText("Buscar");
+        buttonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBuscarActionPerformed(evt);
+            }
+        });
 
         tablePagos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -86,7 +136,7 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Pagos", jScrollPane1);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tablePagosNaoCadastrados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -97,11 +147,11 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tablePagosNaoCadastrados);
 
         jTabbedPane1.addTab("Pagos e não cadastrados", jScrollPane2);
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tableNaoPagosNaoCadastrados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -112,11 +162,19 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane3.setViewportView(tableNaoPagosNaoCadastrados);
 
         jTabbedPane1.addTab("Não pagos e cadastrados", jScrollPane3);
 
+        buttonExportar.setBackground(new java.awt.Color(76, 175, 80));
+        buttonExportar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonExportar.setForeground(new java.awt.Color(255, 255, 255));
         buttonExportar.setText("Exportar PDF");
+        buttonExportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExportarActionPerformed(evt);
+            }
+        });
 
         comboAno.setModel(new javax.swing.DefaultComboBoxModel<>(anos));
 
@@ -127,20 +185,20 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(labelMes)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboMes, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelAno)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(comboAno, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelAno1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(comboCombustivel, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonBuscar)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -168,42 +226,34 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaRelatorioAbastecimento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaRelatorioAbastecimento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaRelatorioAbastecimento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaRelatorioAbastecimento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void buttonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuscarActionPerformed
+        int mes = comboMes.getSelectedIndex() + 1; // Janeiro = 0
+        int ano = Integer.parseInt((String) comboAno.getSelectedItem()); // ou outro ano selecionável
+        TipoCombustivel tipoCombustivel = (TipoCombustivel) comboCombustivel.getSelectedItem();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TelaRelatorioAbastecimento().setVisible(true);
-            }
-        });
-    }
+        List<LinhaRelatorioCupomDTO> pagos = relatorioService.buscarCuponsPagosDTO(mes, ano, tipoCombustivel);
+        List<LinhaRelatorioCupomDTO> pendentes = relatorioService.buscarCuponsNaoCadastradosDTO(mes, ano, tipoCombustivel);
+        List<LinhaRelatorioCupomDTO> semNota = relatorioService.buscarAbastecimentosSemNotaDTO(mes, ano, tipoCombustivel);
+
+        //listas com totais
+        List<LinhaRelatorioCupomDTO> pagosComTotal = relatorioService.agruparComTotais(pagos);
+
+        RelatorioCuponsTableModel modelPagos = (RelatorioCuponsTableModel) tablePagos.getModel();
+        modelPagos.setDados(pagosComTotal);
+
+        RelatorioCuponsTableModel modelPagosNaoCadastrados = (RelatorioCuponsTableModel) tablePagosNaoCadastrados.getModel();
+        modelPagosNaoCadastrados.setDados(pendentes);
+
+        RelatorioCuponsTableModel modelNaoPagosNaoCadastrados = (RelatorioCuponsTableModel) tableNaoPagosNaoCadastrados.getModel();
+        modelNaoPagosNaoCadastrados.setDados(semNota);
+    }//GEN-LAST:event_buttonBuscarActionPerformed
+
+    private void buttonExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExportarActionPerformed
+        JOptionPane.showConfirmDialog(rootPane, "Metodo ainda não implementado");
+    }//GEN-LAST:event_buttonExportarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBuscar;
@@ -215,11 +265,11 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JLabel labelAno;
     private javax.swing.JLabel labelAno1;
     private javax.swing.JLabel labelMes;
+    private javax.swing.JTable tableNaoPagosNaoCadastrados;
     private javax.swing.JTable tablePagos;
+    private javax.swing.JTable tablePagosNaoCadastrados;
     // End of variables declaration//GEN-END:variables
 }

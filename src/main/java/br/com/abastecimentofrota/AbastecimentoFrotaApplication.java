@@ -1,11 +1,13 @@
 package br.com.abastecimentofrota;
 
 import br.com.abastecimentofrota.service.AbastecimentoService;
+import br.com.abastecimentofrota.service.NotaFiscalCupomService;
+import br.com.abastecimentofrota.service.NotaFiscalService;
 import br.com.abastecimentofrota.service.PostoService;
+import br.com.abastecimentofrota.service.RelatorioAbastecimentoService;
 import br.com.abastecimentofrota.service.VeiculoService;
-import br.com.abastecimentofrota.ui.TelaCadastroAbastecimento;
+import br.com.abastecimentofrota.ui.TelaPrincipal;
 import com.formdev.flatlaf.FlatLightLaf;
-
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -31,10 +33,13 @@ public class AbastecimentoFrotaApplication {
         AbastecimentoService abastecimentoService = context.getBean(AbastecimentoService.class);
         VeiculoService veiculoService = context.getBean(VeiculoService.class);
         PostoService postoService = context.getBean(PostoService.class);
+        NotaFiscalService notaService = context.getBean(NotaFiscalService.class);
+        NotaFiscalCupomService notaCupomService = context.getBean(NotaFiscalCupomService.class);
+        RelatorioAbastecimentoService relatorioService = context.getBean(RelatorioAbastecimentoService.class);
 
         // Inicializa a interface com o tema aplicado
         SwingUtilities.invokeLater(() -> {
-            TelaCadastroAbastecimento tela = new TelaCadastroAbastecimento(veiculoService, abastecimentoService, postoService);
+            TelaPrincipal tela = new TelaPrincipal(veiculoService, abastecimentoService, postoService, notaService, notaCupomService, relatorioService);
             tela.setVisible(true);
         });
     }

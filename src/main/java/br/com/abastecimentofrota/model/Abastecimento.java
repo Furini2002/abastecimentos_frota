@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -17,6 +19,8 @@ import lombok.ToString;
 @Table(name = "abastecimentos")
 @Data  
 @NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
 public class Abastecimento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,5 +51,11 @@ public class Abastecimento {
     
     @Column(nullable = false)
     private String cupomFiscal;
+    
+    @ManyToOne
+    @JoinColumn(name = "nota_fiscal_id")
+    private NotaFiscal notaFiscal;   
+    
+    
        
 }

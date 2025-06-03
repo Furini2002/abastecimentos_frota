@@ -34,7 +34,12 @@ public class NotaFiscalService {
     }
     
     public NotaFiscal buscarPorId(Long id) {
-        return repository.findById(id)
+        return repository.findByIdWithCupons(id)
+                .orElseThrow(() -> new RuntimeException("Nota não encontrado!"));
+    }
+    
+    public NotaFiscal buscarPorNUmero (String id) {
+        return repository.findWithNumber(id)
                 .orElseThrow(() -> new RuntimeException("Nota não encontrado!"));
     }
     

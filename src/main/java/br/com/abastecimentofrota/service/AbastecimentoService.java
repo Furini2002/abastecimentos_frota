@@ -1,8 +1,11 @@
 package br.com.abastecimentofrota.service;
 
+import br.com.abastecimentofrota.DTO.LinhaFiltroAbastecimentoDTO;
 import br.com.abastecimentofrota.model.Abastecimento;
 import br.com.abastecimentofrota.repository.AbastecimentoRepository;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,22 +40,26 @@ public class AbastecimentoService {
         repository.saveAll(lista);
     }
 
-    /*public List<Abastecimento> converterLinhasParaAbastecimentos(
-            ObservableList<LinhaAbastecimentoDTO> linhas,
-            Veiculo veiculo,
-            String mes,
-            String tipoRegistro) {
+    public Optional<Abastecimento> findByCupomFiscal(String cupomFiscal) {
+        return repository.findByCupomFiscal(cupomFiscal);
+    }
 
-        return linhas.stream().map(dto -> {
-            Abastecimento abastecimento = new Abastecimento();
-            abastecimento.setVeiculo(veiculo);
-            abastecimento.setData(dto.getDia());
-            abastecimento.setLitros(dto.getQuantidade());
-            abastecimento.set(mes);
-            abastecimento.setTipoRegistro(tipoRegistro);
-            return abastecimento;
+    public List<LinhaFiltroAbastecimentoDTO> converterAbastecimentoParaLinhaFiltroAbastecimentoDTO(List<Abastecimento> abastecimentos) {
+        return abastecimentos.stream().map(abastecimento -> {
+            LinhaFiltroAbastecimentoDTO dto = new LinhaFiltroAbastecimentoDTO();
+
+            dto.setData(abastecimento.getData());
+            dto.setFrota(abastecimento.getVeiculo().getFrota());
+            dto.setPreco(abastecimento.getPreco());
+            dto.setQuantidade(abastecimento.getQuantidade());
+            dto.setCupomFiscal(abastecimento.getCupomFiscal());
+            
+            if (abastecimento.getNotaFiscal() != null) {
+                dto.setNotaFiscal(abastecimento.getNotaFiscal().getNumero());
+            }           
+
+            return dto;
         }).collect(Collectors.toList());
-    }*/
+    }
+
 }
-
-

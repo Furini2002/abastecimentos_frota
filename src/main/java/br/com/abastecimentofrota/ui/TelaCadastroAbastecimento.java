@@ -105,12 +105,18 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
         //configurando o combobox
         TipoRegistroComboBoxModel comboTipoRegistro = new TipoRegistroComboBoxModel();
         comboboxTipoRegistro.setModel(comboTipoRegistro);
+        comboboxTipoRegistro.setSelectedIndex(1);
 
         //text fields não editaveis
         tfPlaca.setEditable(false);
         tfPlaca.setBackground(new Color(220, 220, 220));
         tfCombustível.setEditable(false);
         tfCombustível.setBackground(new Color(220, 220, 220));
+        
+        //ajustando o combobox para o mes vigente
+                // Obtém o mês atual (1 a 12)
+        int mesAtual = LocalDate.now().getMonthValue();
+        comboboxMeses.setSelectedIndex(mesAtual - 2); //-2 pois, -1 é o indice do mes vigente, e -1 para o mes anterior que normalmente é o mes do lançamento
 
         //buscar ao apertar enter
         tfFrota.addActionListener(e -> BuscarVeiculoPorFrota());
@@ -203,6 +209,7 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
         comboboxMeses = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
+        buttonBuscarPorPlaca = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Abastecimentos");
@@ -272,6 +279,16 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
 
         jLabel2.setText("Lista de abastecimentos");
 
+        buttonBuscarPorPlaca.setBackground(new java.awt.Color(76, 127, 207));
+        buttonBuscarPorPlaca.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonBuscarPorPlaca.setForeground(new java.awt.Color(255, 255, 255));
+        buttonBuscarPorPlaca.setText("Encontrar veículo");
+        buttonBuscarPorPlaca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBuscarPorPlacaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -285,20 +302,6 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelFrota)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfFrota, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnBuscar))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelPlaca)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labelPlaca1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfCombustível, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(comboboxTipoRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -308,7 +311,24 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
                                 .addComponent(comboboxMeses, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel2)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(labelFrota)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(tfFrota, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnBuscar)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(buttonBuscarPorPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(labelPlaca)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(labelPlaca1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(tfCombustível, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -319,7 +339,8 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelFrota)
                     .addComponent(tfFrota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar))
+                    .addComponent(btnBuscar)
+                    .addComponent(buttonBuscarPorPlaca))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelPlaca)
@@ -366,6 +387,11 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
     private void tfFrotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFrotaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfFrotaActionPerformed
+
+    private void buttonBuscarPorPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuscarPorPlacaActionPerformed
+        BuscarFrota buscarFrota = new BuscarFrota(veiculoService);
+        buscarFrota.setVisible(true);
+    }//GEN-LAST:event_buttonBuscarPorPlacaActionPerformed
 
     public void BuscarVeiculoPorFrota() {
         String frota = tfFrota.getText().trim();
@@ -419,7 +445,6 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
     public void limparCampos() {
         tablemodel.getLinhas().clear();
         tablemodel.fireTableDataChanged();
-        tablemodel.adicionarLinha();
         tfFrota.setText("");
         tfPlaca.setText("");
         tfCombustível.setText("");
@@ -430,6 +455,7 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton buttonBuscarPorPlaca;
     private javax.swing.JComboBox<String> comboboxMeses;
     private javax.swing.JComboBox<TipoRegistro> comboboxTipoRegistro;
     private javax.swing.JLabel jLabel1;
