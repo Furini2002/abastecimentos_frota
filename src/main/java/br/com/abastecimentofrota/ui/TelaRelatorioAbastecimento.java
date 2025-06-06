@@ -11,6 +11,7 @@ import br.com.abastecimentofrota.util.TipoCombustivel;
 import br.com.abastecimentofrota.util.TipoCombustivelComboBoxModel;
 import java.awt.Color;
 import java.awt.Font;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -45,6 +46,7 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
         this.abastecimentoService = abastecimentoService;
         this.postoService = postoService;
         this.relatorioService = relatorioService;
+        this.setResizable(false);
 
         initComponents();
 
@@ -65,6 +67,10 @@ public class TelaRelatorioAbastecimento extends javax.swing.JFrame {
         RelatorioCuponsTableModel tableModelNaoPagosNaoCadastrados = new RelatorioCuponsTableModel(dadosIniciaisNaoPagosNaoCadastrados);
         configurarTabela(tableNaoPagosNaoCadastrados, tableModelNaoPagosNaoCadastrados);
 
+        //ajustando o combobox para o mes vigente
+        // Obtém o mês atual (1 a 12)
+        int mesAtual = LocalDate.now().getMonthValue();
+        comboMes.setSelectedIndex(mesAtual - 2); //-2 pois, -1 é o indice do mes vigente, e -1 para o mes anterior que normalmente é o mes do lançamento
     }
 
     private void configurarTabela(JTable tabela, RelatorioCuponsTableModel tableModel) {

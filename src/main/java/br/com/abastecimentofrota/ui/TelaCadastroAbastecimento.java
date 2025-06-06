@@ -56,6 +56,12 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
         this.abastecimentoService = abastecimentoService;
         this.postoService = postoService;
         initComponents();
+        this.setResizable(false);
+        
+        //setando o atalho dos botões para aparecerem
+        btnBuscarPorPlaca.setToolTipText("CTRL + B");
+        btnBuscar.setToolTipText("Enter");
+        btnSalvar.setToolTipText("CTRL + S");
 
         //atalho para salvar ctrl+s
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
@@ -212,7 +218,7 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
         comboboxMeses = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
-        buttonBuscarPorPlaca = new javax.swing.JButton();
+        btnBuscarPorPlaca = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Abastecimentos");
@@ -282,13 +288,13 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
 
         jLabel2.setText("Lista de abastecimentos");
 
-        buttonBuscarPorPlaca.setBackground(new java.awt.Color(76, 127, 207));
-        buttonBuscarPorPlaca.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        buttonBuscarPorPlaca.setForeground(new java.awt.Color(255, 255, 255));
-        buttonBuscarPorPlaca.setText("Encontrar veículo");
-        buttonBuscarPorPlaca.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarPorPlaca.setBackground(new java.awt.Color(76, 127, 207));
+        btnBuscarPorPlaca.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBuscarPorPlaca.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarPorPlaca.setText("Encontrar veículo");
+        btnBuscarPorPlaca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonBuscarPorPlacaActionPerformed(evt);
+                btnBuscarPorPlacaActionPerformed(evt);
             }
         });
 
@@ -314,23 +320,25 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
                                 .addComponent(comboboxMeses, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel2)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelFrota)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfFrota, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonBuscarPorPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(labelPlaca)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(labelPlaca)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tfPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(labelPlaca1))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(labelFrota)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tfFrota, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(labelPlaca1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfCombustível)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnBuscarPorPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tfCombustível))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -342,7 +350,7 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
                     .addComponent(labelFrota)
                     .addComponent(tfFrota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscar)
-                    .addComponent(buttonBuscarPorPlaca))
+                    .addComponent(btnBuscarPorPlaca))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelPlaca)
@@ -390,10 +398,10 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfFrotaActionPerformed
 
-    private void buttonBuscarPorPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuscarPorPlacaActionPerformed
-        BuscarFrota buscarFrota = new BuscarFrota(veiculoService);
+    private void btnBuscarPorPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPorPlacaActionPerformed
+        BuscarFrota buscarFrota = new BuscarFrota(veiculoService, this);
         buscarFrota.setVisible(true);
-    }//GEN-LAST:event_buttonBuscarPorPlacaActionPerformed
+    }//GEN-LAST:event_btnBuscarPorPlacaActionPerformed
 
     public void BuscarVeiculoPorFrota() {
         String frota = tfFrota.getText().trim();
@@ -453,11 +461,16 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
         tfFrota.requestFocusInWindow();
         //tablemodel.adicionarLinha();
     }
+    
+    public void setVeiculo(Veiculo veiculo){
+        tfFrota.setText(veiculo.getFrota());
+        BuscarVeiculoPorFrota();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnBuscarPorPlaca;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JButton buttonBuscarPorPlaca;
     private javax.swing.JComboBox<String> comboboxMeses;
     private javax.swing.JComboBox<TipoRegistro> comboboxTipoRegistro;
     private javax.swing.JLabel jLabel1;

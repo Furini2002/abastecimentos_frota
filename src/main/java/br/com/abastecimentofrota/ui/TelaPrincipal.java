@@ -31,6 +31,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         this.notaService = notaService;
         this.notaCupomService = notaCupomService;
         this.relatorioService = relatorioService;
+        this.setResizable(false);
 
         initComponents();
     }

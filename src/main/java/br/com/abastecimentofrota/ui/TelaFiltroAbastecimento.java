@@ -43,6 +43,7 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         this.relatorioService = relatorioService;
         this.notaService = notaService;
         this.veiculoService = veiculoService;
+        this.setResizable(false);
 
         initComponents();
 
@@ -79,8 +80,10 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
             }
         });
         
-        
-        
+        //ajustando o combobox para o mes vigente
+        // Obtém o mês atual (1 a 12)
+        int mesAtual = LocalDate.now().getMonthValue();
+        comboboxMes.setSelectedIndex(mesAtual - 2); //-2 pois, -1 é o indice do mes vigente, e -1 para o mes anterior que normalmente é o mes do lançamento
         
     }
 

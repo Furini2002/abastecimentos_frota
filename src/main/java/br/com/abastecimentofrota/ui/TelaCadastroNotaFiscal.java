@@ -37,6 +37,7 @@ public class TelaCadastroNotaFiscal extends javax.swing.JFrame {
         this.notaService = notaService;
         this.notaCupomService = notaCupomService;
         this.abastecimentoService = abastecimentoService;
+        this.setResizable(false);
 
         initComponents();
 

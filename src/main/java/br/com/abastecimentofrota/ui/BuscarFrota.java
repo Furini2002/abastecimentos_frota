@@ -4,8 +4,11 @@
  */
 package br.com.abastecimentofrota.ui;
 
+import br.com.abastecimentofrota.model.Veiculo;
 import br.com.abastecimentofrota.service.VeiculoService;
 import br.com.abastecimentofrota.util.BuscarFrotaTableModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,13 +21,29 @@ public class BuscarFrota extends javax.swing.JFrame {
      * Creates new form BuscarFrota
      */
     final VeiculoService veiculoService;
-    
-    public BuscarFrota(VeiculoService veiculoService) {
-        initComponents();        
+    final TelaCadastroAbastecimento telaAbastecimento;
+
+    public BuscarFrota(VeiculoService veiculoService, TelaCadastroAbastecimento tela) {
+        initComponents();
         this.veiculoService = veiculoService;
+        this.setResizable(false);
+        this.telaAbastecimento = tela;
+        
+        //setando atalho dos botoes para aparecer
+        buttonBuscar.setToolTipText("Enter");
 
         BuscarFrotaTableModel tableModel = new BuscarFrotaTableModel(veiculoService.listarTodos());
         tableVeiculo.setModel(tableModel);
+
+        //buscar ao apertar a tecla ENTER
+        textPlaca.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    buscarVeiculoPorPlaca();
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -53,6 +72,11 @@ public class BuscarFrota extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tableVeiculo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableVeiculoMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableVeiculo);
 
         buttonBuscar.setBackground(new java.awt.Color(76, 175, 80));
@@ -100,14 +124,32 @@ public class BuscarFrota extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuscarActionPerformed
+        buscarVeiculoPorPlaca();
+    }//GEN-LAST:event_buttonBuscarActionPerformed
+
+    public void buscarVeiculoPorPlaca() {
         String placa = textPlaca.getText();
         if (placa.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Insira uma placa", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         BuscarFrotaTableModel tableModel = (BuscarFrotaTableModel) tableVeiculo.getModel();
         tableModel.setDados(veiculoService.buscarPorPlaca(placa));
-    }//GEN-LAST:event_buttonBuscarActionPerformed
+    }
+
+    private void tableVeiculoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableVeiculoMouseClicked
+        if (evt.getClickCount() == 2) {
+            int linhaSelecionada = tableVeiculo.rowAtPoint(evt.getPoint());
+
+            if (linhaSelecionada != -1) {
+                BuscarFrotaTableModel tablemodel = (BuscarFrotaTableModel) tableVeiculo.getModel();
+                Veiculo veiculoSelecionado = tablemodel.getLinha(linhaSelecionada);
+
+                telaAbastecimento.setVeiculo(veiculoSelecionado);
+                this.dispose();
+            }
+        }
+    }//GEN-LAST:event_tableVeiculoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
