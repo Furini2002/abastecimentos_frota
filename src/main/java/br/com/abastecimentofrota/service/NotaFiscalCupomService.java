@@ -4,12 +4,8 @@
  */
 package br.com.abastecimentofrota.service;
 
-import br.com.abastecimentofrota.model.NotaFiscal;
 import br.com.abastecimentofrota.model.NotaFiscalCupom;
-import br.com.abastecimentofrota.model.Posto;
 import br.com.abastecimentofrota.repository.NotaFiscalCupomRepository;
-import br.com.abastecimentofrota.repository.NotaFiscalRepository;
-import br.com.abastecimentofrota.repository.PostoRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -38,6 +34,10 @@ public class NotaFiscalCupomService {
     public NotaFiscalCupom buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Nota não encontrado!"));
+    }
+    
+    public void excluirCupomPorAbastecimentoId(Long abastecimentoId) {
+        repository.deleteByAbastecimentoCadastradoId(abastecimentoId);
     }
     
 }

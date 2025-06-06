@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 /**
  *
  * @author Administração01
@@ -19,8 +20,9 @@ import lombok.Setter;
 @Data  
 @Entity
 @NoArgsConstructor @AllArgsConstructor
-@Getter
 @Setter
+@Getter
+
 public class NotaFiscalCupom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +35,9 @@ public class NotaFiscalCupom {
     private String numeroCupom;
     
     @ManyToOne(optional = true)
-    private Abastecimento abastecimentoCadastrado;
+    private Abastecimento abastecimentoCadastrado;    
+    
+    
     
     
 }

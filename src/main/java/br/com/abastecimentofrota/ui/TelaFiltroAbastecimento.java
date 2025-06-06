@@ -7,6 +7,7 @@ package br.com.abastecimentofrota.ui;
 import br.com.abastecimentofrota.DTO.LinhaFiltroAbastecimentoDTO;
 import br.com.abastecimentofrota.model.Abastecimento;
 import br.com.abastecimentofrota.service.AbastecimentoService;
+import br.com.abastecimentofrota.service.NotaFiscalCupomService;
 import br.com.abastecimentofrota.service.NotaFiscalService;
 import br.com.abastecimentofrota.service.RelatorioAbastecimentoService;
 import br.com.abastecimentofrota.service.VeiculoService;
@@ -27,10 +28,9 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
 
     private final AbastecimentoService abastecimentoService;
     private final RelatorioAbastecimentoService relatorioService;
-    private final VeiculoService veiculoService;
-    private final NotaFiscalService notaService;
-    private 
-    
+    private final NotaFiscalCupomService notaCupomService;
+    private Abastecimento abastecimentoSelecionado;
+
     //valores combobox Mes
     String[] meses = {
         "01 - Janeiro", "02 - Fevereiro", "03 - Março", "04 - Abril",
@@ -38,11 +38,10 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         "09 - Setembro", "10 - Outubro", "11 - Novembro", "12 - Dezembro"
     };
 
-    public TelaFiltroAbastecimento(AbastecimentoService abastecimentoService, RelatorioAbastecimentoService relatorioService, VeiculoService veiculoService, NotaFiscalService notaService) {
+    public TelaFiltroAbastecimento(AbastecimentoService abastecimentoService, RelatorioAbastecimentoService relatorioService, VeiculoService veiculoService, NotaFiscalService notaService, NotaFiscalCupomService notaCupomService) {
         this.abastecimentoService = abastecimentoService;
         this.relatorioService = relatorioService;
-        this.notaService = notaService;
-        this.veiculoService = veiculoService;
+        this.notaCupomService = notaCupomService;
         this.setResizable(false);
 
         initComponents();
@@ -63,6 +62,7 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         //adicionando evento de apertar enter e filtrar
         getRootPane().setDefaultButton(buttonFiltrar);
 
+        //selecionando o abastcimetno ao 
         tableAbastecimentos.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
@@ -72,19 +72,18 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
                         int modelRow = tableAbastecimentos.convertRowIndexToModel(selectedRow);
                         FiltroAbastecimentoTableModel tableModel = (FiltroAbastecimentoTableModel) tableAbastecimentos.getModel();
                         LinhaFiltroAbastecimentoDTO dtoSelecionado = tableModel.getLinha(modelRow);
-                        Abastecimento abastecimentoSelecionado = dtoSelecionado.converterParaAbastecimento(dtoSelecionado, veiculoService, notaService);
+                        abastecimentoSelecionado = dtoSelecionado.converterParaAbastecimento(dtoSelecionado, veiculoService, notaService);
 
-                        System.out.println(abastecimentoSelecionado);
                     }
                 }
             }
         });
-        
+
         //ajustando o combobox para o mes vigente
         // Obtém o mês atual (1 a 12)
         int mesAtual = LocalDate.now().getMonthValue();
         comboboxMes.setSelectedIndex(mesAtual - 2); //-2 pois, -1 é o indice do mes vigente, e -1 para o mes anterior que normalmente é o mes do lançamento
-        
+
     }
 
     /**
@@ -205,6 +204,11 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         buttonEditar.setBackground(new java.awt.Color(255, 235, 59));
         buttonEditar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         buttonEditar.setText("Editar");
+        buttonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditarActionPerformed(evt);
+            }
+        });
 
         buttonExcluir.setBackground(new java.awt.Color(244, 67, 54));
         buttonExcluir.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -375,7 +379,7 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
 
             // Atualiza a tabela
             FiltroAbastecimentoTableModel tableModel = (FiltroAbastecimentoTableModel) tableAbastecimentos.getModel();
-            tableModel.setDados(resultados);  // Atualiza os dados sem trocar o modelo
+            tableModel.atualizarDados(resultados); // Atualiza os dados sem trocar o modelo
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Erro ao converter número: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
@@ -389,12 +393,39 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
     }//GEN-LAST:event_formKeyPressed
 
     private void buttonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExcluirActionPerformed
-        int respostaExcluir = JOptionPane.showConfirmDialog(this, "Deseja excluir esse registro ?", "Exclusão de abastecimetno", JOptionPane.YES_NO_OPTION);
-        
-        if (respostaExcluir == JOptionPane.YES_OPTION){
-            System.out.println("oi");
+        int respostaExcluir = JOptionPane.showConfirmDialog(
+                this,
+                "Deseja excluir esse registro ?",
+                "Exclusão de abastecimento",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (respostaExcluir == JOptionPane.YES_OPTION) {
+            try {
+                // Remove o vínculo na tabela intermediária (NotaFiscalCupom)
+                notaCupomService.excluirCupomPorAbastecimentoId(abastecimentoSelecionado.getId());
+
+                // exclui o abastecimento
+                abastecimentoService.excluir(abastecimentoSelecionado);
+
+                // Atualiza apenas a linha removida
+                int linhaSelecionada = tableAbastecimentos.getSelectedRow();
+                if (linhaSelecionada != -1) {
+                    FiltroAbastecimentoTableModel tablemodel = (FiltroAbastecimentoTableModel) tableAbastecimentos.getModel();
+                    tablemodel.removerLinha(linhaSelecionada);
+                    //tablemodel.fireTableRowsDeleted(linhaSelecionada, linhaSelecionada);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
+
         }
     }//GEN-LAST:event_buttonExcluirActionPerformed
+
+    private void buttonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonEditarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -61,5 +61,9 @@ public class AbastecimentoService {
             return dto;
         }).collect(Collectors.toList());
     }
+    
+    public void excluir(Abastecimento abastecimento){
+        repository.delete(abastecimento);
+    }
 
 }

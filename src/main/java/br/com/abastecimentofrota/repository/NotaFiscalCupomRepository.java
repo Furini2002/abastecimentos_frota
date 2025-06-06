@@ -3,9 +3,11 @@ package br.com.abastecimentofrota.repository;
 import br.com.abastecimentofrota.model.Abastecimento;
 import br.com.abastecimentofrota.model.NotaFiscalCupom;
 import br.com.abastecimentofrota.util.TipoCombustivel;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -38,4 +40,8 @@ public interface NotaFiscalCupomRepository extends JpaRepository<NotaFiscalCupom
             @Param("ano") int ano,
             @Param("tipoCombustivel") TipoCombustivel tipoCombustivel);
 
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM NotaFiscalCupom nfc WHERE nfc.abastecimentoCadastrado.id = :abastecimentoId")
+    void deleteByAbastecimentoCadastradoId(@Param("abastecimentoId") Long abastecimentoId);
 }

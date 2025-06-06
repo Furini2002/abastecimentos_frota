@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class LinhaFiltroAbastecimentoDTO {
+
     private Long idAbastecimento;
     private LocalDate data;
     private String frota;
@@ -21,7 +22,6 @@ public class LinhaFiltroAbastecimentoDTO {
     private BigDecimal quantidade;
     private BigDecimal quantidadeMin;
     private BigDecimal quantidadeMax;
-    
 
     public LinhaFiltroAbastecimentoDTO() {
         this.data = null;
@@ -146,10 +146,10 @@ public class LinhaFiltroAbastecimentoDTO {
     public void setIdAbastecimento(Long idAbastecimento) {
         this.idAbastecimento = idAbastecimento;
     }
-    
-    public Abastecimento converterParaAbastecimento(LinhaFiltroAbastecimentoDTO dto, VeiculoService veiculoService, NotaFiscalService notaService){
+
+    public Abastecimento converterParaAbastecimento(LinhaFiltroAbastecimentoDTO dto, VeiculoService veiculoService, NotaFiscalService notaService) {
         Abastecimento ab = new Abastecimento();
-        
+
         ab.setId(dto.getIdAbastecimento());
         ab.setVeiculo(veiculoService.buscarPorFrota(dto.getFrota()));
         ab.setData(dto.getData());
@@ -157,12 +157,10 @@ public class LinhaFiltroAbastecimentoDTO {
         ab.setPreco(dto.getPreco() != null ? dto.getPreco() : null);
         ab.setTipoRegistro(TipoRegistro.DIARIO);
         ab.setCupomFiscal(dto.getCupomFiscal().isEmpty() ? dto.getCupomFiscal() : null);
-        ab.setNotaFiscal(dto.getNotaFiscal() != null  ? notaService.buscarPorNUmero(dto.getNotaFiscal()) : null);
-        
-        return ab;        
+        ab.setNotaFiscal(
+                notaService.buscarPorNUmero(dto.getNotaFiscal()).orElse(null)
+        );
+        return ab;
     }
-    
-    
-    
-    
+
 }

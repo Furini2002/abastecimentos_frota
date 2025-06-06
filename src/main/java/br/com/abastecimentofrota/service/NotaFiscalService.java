@@ -10,6 +10,7 @@ import br.com.abastecimentofrota.repository.NotaFiscalRepository;
 import br.com.abastecimentofrota.repository.PostoRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 /**
@@ -38,9 +39,8 @@ public class NotaFiscalService {
                 .orElseThrow(() -> new RuntimeException("Nota não encontrado!"));
     }
     
-    public NotaFiscal buscarPorNUmero (String id) {
-        return repository.findWithNumber(id)
-                .orElseThrow(() -> new RuntimeException("Nota não encontrado!"));
+    public Optional<NotaFiscal> buscarPorNUmero (String id) {
+        return repository.findWithNumber(id);
     }
     
 }
