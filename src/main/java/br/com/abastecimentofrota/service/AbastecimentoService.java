@@ -53,16 +53,16 @@ public class AbastecimentoService {
             dto.setPreco(abastecimento.getPreco());
             dto.setQuantidade(abastecimento.getQuantidade());
             dto.setCupomFiscal(abastecimento.getCupomFiscal());
-            
+
             if (abastecimento.getNotaFiscal() != null) {
                 dto.setNotaFiscal(abastecimento.getNotaFiscal().getNumero());
-            }           
+            }
 
             return dto;
         }).collect(Collectors.toList());
     }
-    
-    public void excluir(Abastecimento abastecimento){
+
+    public void excluir(Abastecimento abastecimento) {
         repository.delete(abastecimento);
     }
 

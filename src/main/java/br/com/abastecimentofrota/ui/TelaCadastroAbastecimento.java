@@ -399,7 +399,7 @@ public class TelaCadastroAbastecimento extends javax.swing.JFrame {
     }//GEN-LAST:event_tfFrotaActionPerformed
 
     private void btnBuscarPorPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarPorPlacaActionPerformed
-        BuscarFrota buscarFrota = new BuscarFrota(veiculoService, this);
+        TelaBuscarFrota buscarFrota = new TelaBuscarFrota(veiculoService, this);
         buscarFrota.setVisible(true);
     }//GEN-LAST:event_btnBuscarPorPlacaActionPerformed
 

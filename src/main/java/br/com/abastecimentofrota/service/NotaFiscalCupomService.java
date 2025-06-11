@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.com.abastecimentofrota.service;
 
 import br.com.abastecimentofrota.model.NotaFiscalCupom;
@@ -16,6 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class NotaFiscalCupomService {
+
     private final NotaFiscalCupomRepository repository;
 
     public NotaFiscalCupomService(NotaFiscalCupomRepository repository) {
@@ -30,14 +27,13 @@ public class NotaFiscalCupomService {
     public NotaFiscalCupom salvar(NotaFiscalCupom nota) {
         return repository.save(nota);
     }
-    
+
     public NotaFiscalCupom buscarPorId(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Nota não encontrado!"));
     }
-    
+
     public void excluirCupomPorAbastecimentoId(Long abastecimentoId) {
         repository.deleteByAbastecimentoCadastradoId(abastecimentoId);
-    }
-    
+    }    
 }

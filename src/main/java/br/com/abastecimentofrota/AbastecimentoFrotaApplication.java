@@ -1,6 +1,7 @@
 package br.com.abastecimentofrota;
 
 import br.com.abastecimentofrota.service.AbastecimentoService;
+import br.com.abastecimentofrota.service.AtualizarAbastecimentoService;
 import br.com.abastecimentofrota.service.NotaFiscalCupomService;
 import br.com.abastecimentofrota.service.NotaFiscalService;
 import br.com.abastecimentofrota.service.PostoService;
@@ -36,10 +37,11 @@ public class AbastecimentoFrotaApplication {
         NotaFiscalService notaService = context.getBean(NotaFiscalService.class);
         NotaFiscalCupomService notaCupomService = context.getBean(NotaFiscalCupomService.class);
         RelatorioAbastecimentoService relatorioService = context.getBean(RelatorioAbastecimentoService.class);
-
+        AtualizarAbastecimentoService atualizarAbastecimento = context.getBean(AtualizarAbastecimentoService.class);
+        
         // Inicializa a interface com o tema aplicado
         SwingUtilities.invokeLater(() -> {
-            TelaPrincipal tela = new TelaPrincipal(veiculoService, abastecimentoService, postoService, notaService, notaCupomService, relatorioService);
+            TelaPrincipal tela = new TelaPrincipal(atualizarAbastecimento, veiculoService, abastecimentoService, postoService, notaService, notaCupomService, relatorioService);
             tela.setVisible(true);
         });
     }

@@ -5,6 +5,7 @@
 package br.com.abastecimentofrota.ui;
 
 import br.com.abastecimentofrota.service.AbastecimentoService;
+import br.com.abastecimentofrota.service.AtualizarAbastecimentoService;
 import br.com.abastecimentofrota.service.NotaFiscalCupomService;
 import br.com.abastecimentofrota.service.NotaFiscalService;
 import br.com.abastecimentofrota.service.PostoService;
@@ -23,14 +24,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private final NotaFiscalService notaService;
     private final NotaFiscalCupomService notaCupomService;
     private final RelatorioAbastecimentoService relatorioService;
+    private final AtualizarAbastecimentoService atualizarAbastecimento;
 
-    public TelaPrincipal(VeiculoService veiculoService, AbastecimentoService abastecimentoService, PostoService postoService, NotaFiscalService notaService, NotaFiscalCupomService notaCupomService, RelatorioAbastecimentoService relatorioService) {
+    public TelaPrincipal(AtualizarAbastecimentoService atualizarAbastecimento, VeiculoService veiculoService, AbastecimentoService abastecimentoService, PostoService postoService, NotaFiscalService notaService, NotaFiscalCupomService notaCupomService, RelatorioAbastecimentoService relatorioService) {
         this.veiculoService = veiculoService;
         this.abastecimentoService = abastecimentoService;
         this.postoService = postoService;
         this.notaService = notaService;
         this.notaCupomService = notaCupomService;
         this.relatorioService = relatorioService;
+        this.atualizarAbastecimento = atualizarAbastecimento;
         this.setResizable(false);
 
         initComponents();
@@ -130,7 +133,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        TelaFiltroAbastecimento tela = new TelaFiltroAbastecimento(abastecimentoService, relatorioService, veiculoService, notaService, notaCupomService);
+        TelaFiltroAbastecimento tela = new TelaFiltroAbastecimento(atualizarAbastecimento, abastecimentoService, relatorioService, veiculoService, notaService, notaCupomService);
         tela.setVisible(true);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 

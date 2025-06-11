@@ -156,7 +156,7 @@ public class LinhaFiltroAbastecimentoDTO {
         ab.setQuantidade(dto.getQuantidade());
         ab.setPreco(dto.getPreco() != null ? dto.getPreco() : null);
         ab.setTipoRegistro(TipoRegistro.DIARIO);
-        ab.setCupomFiscal(dto.getCupomFiscal().isEmpty() ? dto.getCupomFiscal() : null);
+        ab.setCupomFiscal(!(dto.getCupomFiscal().isEmpty()) ? dto.getCupomFiscal() : null);
         ab.setNotaFiscal(
                 notaService.buscarPorNUmero(dto.getNotaFiscal()).orElse(null)
         );

@@ -15,15 +15,15 @@ import javax.swing.JOptionPane;
  *
  * @author Administração01
  */
-public class BuscarFrota extends javax.swing.JFrame {
+public class TelaBuscarFrota extends javax.swing.JFrame {
 
     /**
-     * Creates new form BuscarFrota
+     * Creates new form TelaBuscarFrota
      */
     final VeiculoService veiculoService;
     final TelaCadastroAbastecimento telaAbastecimento;
 
-    public BuscarFrota(VeiculoService veiculoService, TelaCadastroAbastecimento tela) {
+    public TelaBuscarFrota(VeiculoService veiculoService, TelaCadastroAbastecimento tela) {
         initComponents();
         this.veiculoService = veiculoService;
         this.setResizable(false);

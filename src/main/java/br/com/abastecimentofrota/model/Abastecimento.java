@@ -54,8 +54,6 @@ public class Abastecimento {
     
     @ManyToOne
     @JoinColumn(name = "nota_fiscal_id")
-    private NotaFiscal notaFiscal;   
-    
-    
-       
+    private NotaFiscal notaFiscal;       
+     
 }

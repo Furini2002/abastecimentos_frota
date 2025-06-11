@@ -6,6 +6,7 @@ import br.com.abastecimentofrota.util.TipoCombustivel;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -44,4 +45,6 @@ public interface NotaFiscalCupomRepository extends JpaRepository<NotaFiscalCupom
     @Transactional
     @Query("DELETE FROM NotaFiscalCupom nfc WHERE nfc.abastecimentoCadastrado.id = :abastecimentoId")
     void deleteByAbastecimentoCadastradoId(@Param("abastecimentoId") Long abastecimentoId);
+    
+    Optional<NotaFiscalCupom> findByAbastecimentoCadastrado(Abastecimento abastecimento);
 }

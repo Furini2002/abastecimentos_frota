@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package br.com.abastecimentofrota.ui;
 
 import br.com.abastecimentofrota.DTO.LinhaFiltroAbastecimentoDTO;
 import br.com.abastecimentofrota.model.Abastecimento;
 import br.com.abastecimentofrota.service.AbastecimentoService;
+import br.com.abastecimentofrota.service.AtualizarAbastecimentoService;
 import br.com.abastecimentofrota.service.NotaFiscalCupomService;
 import br.com.abastecimentofrota.service.NotaFiscalService;
 import br.com.abastecimentofrota.service.RelatorioAbastecimentoService;
@@ -29,6 +26,8 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
     private final AbastecimentoService abastecimentoService;
     private final RelatorioAbastecimentoService relatorioService;
     private final NotaFiscalCupomService notaCupomService;
+    private final VeiculoService veiculoService;
+    private final AtualizarAbastecimentoService atualizarAbastecimento;
     private Abastecimento abastecimentoSelecionado;
 
     //valores combobox Mes
@@ -38,10 +37,12 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         "09 - Setembro", "10 - Outubro", "11 - Novembro", "12 - Dezembro"
     };
 
-    public TelaFiltroAbastecimento(AbastecimentoService abastecimentoService, RelatorioAbastecimentoService relatorioService, VeiculoService veiculoService, NotaFiscalService notaService, NotaFiscalCupomService notaCupomService) {
+    public TelaFiltroAbastecimento(AtualizarAbastecimentoService atualizarAbastecimento, AbastecimentoService abastecimentoService, RelatorioAbastecimentoService relatorioService, VeiculoService veiculoService, NotaFiscalService notaService, NotaFiscalCupomService notaCupomService) {
         this.abastecimentoService = abastecimentoService;
         this.relatorioService = relatorioService;
         this.notaCupomService = notaCupomService;
+        this.veiculoService = veiculoService;
+        this.atualizarAbastecimento = atualizarAbastecimento;
         this.setResizable(false);
 
         initComponents();
@@ -62,7 +63,7 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         //adicionando evento de apertar enter e filtrar
         getRootPane().setDefaultButton(buttonFiltrar);
 
-        //selecionando o abastcimetno ao 
+        //selecionando o abastcimetno ao selecionar na tabela
         tableAbastecimentos.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent event) {
@@ -190,7 +191,7 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         });
 
         buttonFiltrar.setBackground(new java.awt.Color(76, 175, 80));
-        buttonFiltrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonFiltrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         buttonFiltrar.setForeground(new java.awt.Color(255, 255, 255));
         buttonFiltrar.setText("Filtrar");
         buttonFiltrar.addActionListener(new java.awt.event.ActionListener() {
@@ -202,7 +203,7 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         jLabel9.setText("Cupom Fiscal");
 
         buttonEditar.setBackground(new java.awt.Color(255, 235, 59));
-        buttonEditar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonEditar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         buttonEditar.setText("Editar");
         buttonEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -211,7 +212,7 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
         });
 
         buttonExcluir.setBackground(new java.awt.Color(244, 67, 54));
-        buttonExcluir.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        buttonExcluir.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         buttonExcluir.setText("Excluir");
         buttonExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -320,7 +321,7 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonEditar)
                     .addComponent(buttonExcluir))
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -424,7 +425,8 @@ public class TelaFiltroAbastecimento extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonExcluirActionPerformed
 
     private void buttonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditarActionPerformed
-        // TODO add your handling code here:
+        TelaEditarAbastecimento tela = new TelaEditarAbastecimento(atualizarAbastecimento, abastecimentoService, abastecimentoSelecionado, veiculoService);
+        tela.setVisible(true);
     }//GEN-LAST:event_buttonEditarActionPerformed
 
 
